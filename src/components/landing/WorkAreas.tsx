@@ -5,6 +5,7 @@ import {
   Droplets,
   Layers,
   Sprout,
+  Factory,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -45,12 +46,23 @@ const areas: WorkArea[] = [
     description:
       'Entornos naturales, vivos y eficientes. Diseño y ejecución de áreas verdes integrales. Implementamos soluciones de paisajismo acompañadas de sistemas de riego automatizados y de bajo consumo, realzando la estética de los espacios mientras cuidamos cada gota de agua.',
   },
+  {
+    icon: Factory,
+    title: 'Fábrica',
+    description:
+      'Producción propia de materiales y elementos para la construcción. Contamos con instalaciones equipadas para fabricar y suministrar insumos de calidad, garantizando trazabilidad, control de costos y tiempos de entrega confiables para cada obra.',
+  },
 ];
 
 export default function WorkAreas() {
   return (
-    <section id="areas" className="section-py bg-charcoal-50">
-      <div className="max-w-8xl mx-auto container-px">
+    <section id="areas" className="section-py bg-charcoal-900 text-white relative overflow-hidden">
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-terracotta-500 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-terracotta-500 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative max-w-8xl mx-auto container-px">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -59,18 +71,18 @@ export default function WorkAreas() {
           className="text-center max-w-2xl mx-auto mb-16"
         >
           <div className="flex items-center justify-center gap-3 mb-5">
-            <div className="w-10 h-px bg-terracotta-500" />
-            <span className="text-terracotta-500 text-sm font-semibold tracking-widest uppercase">
+            <div className="w-10 h-px bg-terracotta-400" />
+            <span className="text-terracotta-400 text-sm font-semibold tracking-widest uppercase">
               Áreas de Trabajo
             </span>
-            <div className="w-10 h-px bg-terracotta-500" />
+            <div className="w-10 h-px bg-terracotta-400" />
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl text-charcoal-900">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl">
             Especialistas en cada frente de obra
           </h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-charcoal-100">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {areas.map((area, i) => (
             <motion.div
               key={area.title}
@@ -78,16 +90,16 @@ export default function WorkAreas() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="group bg-white p-8 lg:p-10 hover:bg-terracotta-50 transition-colors duration-300 cursor-default"
+              className="group bg-charcoal-800 p-8 border border-charcoal-700 hover:border-terracotta-500 transition-colors duration-300 cursor-default"
             >
-              <div className="w-14 h-14 flex items-center justify-center bg-charcoal-50 group-hover:bg-terracotta-100 transition-colors duration-300 mb-6">
+              <div className="w-14 h-14 flex items-center justify-center bg-charcoal-700 group-hover:bg-terracotta-100 transition-colors duration-300 mb-6">
                 <area.icon
-                  className="w-7 h-7 text-terracotta-500"
+                  className="w-7 h-7 text-terracotta-400"
                   strokeWidth={1.25}
                 />
               </div>
-              <h3 className="text-xl text-charcoal-900 mb-3">{area.title}</h3>
-              <p className="text-charcoal-500 leading-relaxed">{area.description}</p>
+              <h3 className="text-xl text-white mb-3">{area.title}</h3>
+              <p className="text-white/60 leading-relaxed">{area.description}</p>
             </motion.div>
           ))}
         </div>

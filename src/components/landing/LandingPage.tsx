@@ -3,7 +3,7 @@ import Hero from '@/components/landing/Hero';
 import About from '@/components/landing/About';
 import WorkAreas from '@/components/landing/WorkAreas';
 import Services from '@/components/landing/Services';
-import Capacity from '@/components/landing/Capacity';
+import Clients from '@/components/landing/Clients';
 import Gallery from '@/components/landing/Gallery';
 import Footer from '@/components/landing/Footer';
 
@@ -16,7 +16,7 @@ export default function LandingPage() {
         <About />
         <WorkAreas />
         <Services />
-        <Capacity />
+        <Clients />
         <Gallery />
       </main>
       <Footer />

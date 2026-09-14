@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, HardHat } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import LogoPlaceholder from '@/components/landing/LogoPlaceholder';
 
 const navLinks = [
   { label: 'Nosotros', href: '#nosotros' },
   { label: 'Áreas de Trabajo', href: '#areas' },
   { label: 'Servicios', href: '#servicios' },
-  { label: 'Capacidad', href: '#capacidad' },
+  { label: 'Clientes', href: '#clientes' },
   { label: 'Proyectos', href: '#galeria' },
   { label: 'Contacto', href: '#contacto' },
 ];
@@ -36,11 +37,9 @@ export default function Navbar() {
       >
         <div className="max-w-8xl mx-auto container-px flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <HardHat
-              className={`w-7 h-7 transition-colors ${
-                scrolled ? 'text-terracotta-500' : 'text-white'
-              }`}
-              strokeWidth={1.5}
+            <LogoPlaceholder
+              size={28}
+              variant={scrolled ? 'dark' : 'light'}
             />
             <span
               className={`font-display font-bold text-lg tracking-tight transition-colors ${
@@ -63,16 +62,6 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
-            <Link
-              to="/admin"
-              className={`text-sm font-semibold border px-5 py-2 transition-all ${
-                scrolled
-                  ? 'border-charcoal-800 text-charcoal-800 hover:bg-charcoal-800 hover:text-white'
-                  : 'border-white/70 text-white hover:bg-white hover:text-charcoal-800'
-              }`}
-            >
-              Admin
-            </Link>
           </nav>
 
           <button
@@ -108,7 +97,7 @@ export default function Navbar() {
             >
               <div className="flex items-center justify-between px-6 py-5 border-b border-charcoal-100">
                 <div className="flex items-center gap-2.5">
-                  <HardHat className="w-6 h-6 text-terracotta-500" strokeWidth={1.5} />
+                  <LogoPlaceholder size={24} variant="dark" />
                   <span className="font-display font-bold text-charcoal-800">El Gallego</span>
                 </div>
                 <button
@@ -130,13 +119,6 @@ export default function Navbar() {
                     {link.label}
                   </a>
                 ))}
-                <Link
-                  to="/admin"
-                  onClick={() => setMobileOpen(false)}
-                  className="btn-primary mt-6 w-full"
-                >
-                  Panel Admin
-                </Link>
               </nav>
             </motion.div>
           </motion.div>

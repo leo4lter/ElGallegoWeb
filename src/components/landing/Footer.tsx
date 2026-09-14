@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { MapPin, HardHat, ArrowUp } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { MapPin, Phone, User, ArrowUp } from 'lucide-react';
+import LogoPlaceholder from '@/components/landing/LogoPlaceholder';
 
 export default function Footer() {
   return (
@@ -14,7 +14,7 @@ export default function Footer() {
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center gap-2.5 mb-5">
-              <HardHat className="w-7 h-7 text-terracotta-500" strokeWidth={1.5} />
+              <LogoPlaceholder size={32} variant="light" />
               <span className="font-display font-bold text-xl">Constructora El Gallego</span>
             </div>
             <p className="text-white/60 leading-relaxed max-w-sm">
@@ -33,6 +33,20 @@ export default function Footer() {
               Contacto
             </h3>
             <ul className="space-y-5">
+              <li className="flex items-start gap-3">
+                <Phone className="w-5 h-5 text-terracotta-400 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                <div>
+                  <p className="text-white/50 text-sm">Teléfono</p>
+                  <p className="text-white text-base font-medium">2920 548971</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <User className="w-5 h-5 text-terracotta-400 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
+                <div>
+                  <p className="text-white/50 text-sm">Responsable Operativo</p>
+                  <p className="text-white text-base font-medium">Fernando Daniel Maggiori</p>
+                </div>
+              </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-terracotta-400 flex-shrink-0 mt-0.5" strokeWidth={1.5} />
                 <div>
@@ -57,9 +71,9 @@ export default function Footer() {
               <ul className="space-y-3">
                 <li><a href="#nosotros" className="text-white/60 hover:text-terracotta-400 transition-colors">Sobre Nosotros</a></li>
                 <li><a href="#areas" className="text-white/60 hover:text-terracotta-400 transition-colors">Áreas de Trabajo</a></li>
-                <li><a href="#capacidad" className="text-white/60 hover:text-terracotta-400 transition-colors">Capacidad Operativa</a></li>
+                <li><a href="#servicios" className="text-white/60 hover:text-terracotta-400 transition-colors">Servicios</a></li>
+                <li><a href="#clientes" className="text-white/60 hover:text-terracotta-400 transition-colors">Clientes</a></li>
                 <li><a href="#galeria" className="text-white/60 hover:text-terracotta-400 transition-colors">Galería</a></li>
-                <li><Link to="/admin" className="text-white/60 hover:text-terracotta-400 transition-colors">Panel de Administración</Link></li>
               </ul>
             </div>
             <a

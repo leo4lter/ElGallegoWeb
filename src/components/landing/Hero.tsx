@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowDown, HardHat } from 'lucide-react';
+import { ArrowDown, ArrowRight } from 'lucide-react';
 
 const HERO_IMAGE = 'https://images.pexels.com/photos/15071423/pexels-photo-15071423.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1280';
 
@@ -44,9 +44,9 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <a href="#galeria" className="btn-primary">
-              <HardHat className="w-5 h-5" strokeWidth={1.5} />
-              Ver Proyectos
+            <a href="#servicios" className="btn-primary">
+              <ArrowRight className="w-5 h-5" strokeWidth={1.5} />
+              Nuestros Servicios
             </a>
             <a
               href="#contacto"
