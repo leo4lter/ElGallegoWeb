@@ -10,15 +10,17 @@ export default function Footer() {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [sent, setSent] = useState(false);
-  const { logo_url, logo_light_url } = useSiteSettings();
+  const { logo_url, logo_light_url, loading } = useSiteSettings();
 
   const renderLogo = (height: number) => {
     const url = logo_light_url || logo_url;
-    return url ? (
-      <img src={url} alt="Constructora El Gallego" style={{ height, width: 'auto', maxWidth: 300 }} className="object-contain" />
-    ) : (
-      <LogoPlaceholder size={height} variant="light" />
-    );
+    if (url) {
+      return (
+        <img src={url} alt="Constructora El Gallego" style={{ height, width: 'auto', maxWidth: 300 }} className="object-contain" />
+      );
+    }
+    if (loading) return <div style={{ height, width: height * 2.3 }} />;
+    return <LogoPlaceholder size={height} variant="light" />;
   };
 
   const handleSubmit = (e: React.FormEvent) => {

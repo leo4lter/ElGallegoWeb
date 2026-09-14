@@ -17,7 +17,7 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { logo_url, logo_light_url } = useSiteSettings();
+  const { logo_url, logo_light_url, loading } = useSiteSettings();
 
   const renderLogo = (height: number, useLight: boolean) => {
     const url = useLight ? (logo_light_url || logo_url) : (logo_url || logo_light_url);
@@ -31,6 +31,7 @@ export default function Navbar() {
         />
       );
     }
+    if (loading) return <div style={{ height, width: height * 2.3 }} />;
     return <LogoPlaceholder size={height} variant={useLight ? 'light' : 'dark'} />;
   };
 

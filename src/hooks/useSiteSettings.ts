@@ -16,7 +16,7 @@ export function useSiteSettings(): SiteSettings & { loading: boolean } {
         setSettings(s);
         if (s.favicon_url) {
           const link = document.querySelector("link[rel='icon']") as HTMLLinkElement | null;
-          if (link) link.href = s.favicon_url;
+          if (link) link.href = `${s.favicon_url}?v=${Date.now()}`;
         }
       } catch {
         // ignore
