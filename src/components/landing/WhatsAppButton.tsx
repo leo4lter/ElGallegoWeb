@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import ScrollToTop from '@/components/landing/ScrollToTop';
 
 const WHATSAPP_NUMBER = '5492920548971';
 const WHATSAPP_MESSAGE = 'Hola, me gustaría hacer una consulta sobre sus servicios.';
@@ -81,6 +82,7 @@ export default function WhatsAppButton() {
           <WhatsAppIcon className="w-7 h-7" />
         )}
       </motion.button>
+      <ScrollToTop />
     </div>
   );
 }

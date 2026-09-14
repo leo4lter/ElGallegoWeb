@@ -10,14 +10,16 @@ export default function Footer() {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [sent, setSent] = useState(false);
-  const { logo_url } = useSiteSettings();
+  const { logo_url, logo_light_url } = useSiteSettings();
 
-  const renderLogo = (height: number) =>
-    logo_url ? (
-      <img src={logo_url} alt="Constructora El Gallego" style={{ height, width: 'auto', maxWidth: 300 }} className="object-contain" />
+  const renderLogo = (height: number) => {
+    const url = logo_light_url || logo_url;
+    return url ? (
+      <img src={url} alt="Constructora El Gallego" style={{ height, width: 'auto', maxWidth: 300 }} className="object-contain" />
     ) : (
       <LogoPlaceholder size={height} variant="light" />
     );
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -161,31 +163,26 @@ export default function Footer() {
           </motion.div>
         </div>
 
-        <div className="border-t border-charcoal-700 mt-16 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/40 text-sm">
-            © {new Date().getFullYear()} Constructora El Gallego. Todos los derechos reservados.
-          </p>
-          <p className="text-white/40 text-sm">
-            Desarrollado por{' '}
-            <a
-              href="https://elmanca.com.ar"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-terracotta-400 hover:text-terracotta-300 transition-colors font-medium"
-            >
-              Manca
-            </a>
-            {' · '}
-            <a
-              href="https://elmanca.com.ar"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/40 hover:text-terracotta-400 transition-colors"
-            >
-              elmanca.com.ar
-            </a>
-          </p>
-          <p className="text-white/40 text-sm">Sierra Grande · Río Negro · Argentina</p>
+        <div className="border-t border-charcoal-700 mt-16 pt-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-white/40 text-sm">
+              © {new Date().getFullYear()} Constructora El Gallego. Todos los derechos reservados.
+            </p>
+            <p className="text-white/40 text-sm">Sierra Grande · Río Negro · Argentina</p>
+          </div>
+          <div className="flex justify-center mt-6">
+            <p className="text-white/40 text-sm">
+              Desarrollado por{' '}
+              <a
+                href="https://elmanca.com.ar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-terracotta-400 hover:text-terracotta-300 transition-colors font-medium"
+              >
+                Manca
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

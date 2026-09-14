@@ -19,15 +19,15 @@ export default function ScrollToTop() {
     <AnimatePresence>
       {visible && (
         <motion.button
-          initial={{ opacity: 0, scale: 0.6, y: 20 }}
+          initial={{ opacity: 0, scale: 0.6, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.6, y: 20 }}
+          exit={{ opacity: 0, scale: 0.6, y: 10 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
           onClick={scrollToTop}
           aria-label="Volver arriba"
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
-          className="fixed bottom-6 right-6 z-40 w-12 h-12 flex items-center justify-center bg-charcoal-900 text-white rounded-full shadow-lg shadow-charcoal-900/30 hover:bg-terracotta-500 transition-colors duration-300 group"
+          className="w-12 h-12 flex items-center justify-center bg-charcoal-900 text-white rounded-full shadow-lg shadow-charcoal-900/30 hover:bg-terracotta-500 transition-colors duration-300 group"
         >
           <motion.span
             animate={{ y: [0, -3, 0] }}
