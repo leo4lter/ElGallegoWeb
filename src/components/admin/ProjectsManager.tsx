@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useData } from '@/context/DataContext';
 import type { Project } from '@/lib/supabase';
-import { Plus, Pencil, Trash2, X, AlertCircle, ImagePlus, Trash } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, AlertCircle, ImagePlus, Trash, Upload } from 'lucide-react';
 
 const SERVICE_CATEGORIES = [
   'Obras Viales',
@@ -116,6 +116,42 @@ export default function ProjectsManager() {
     setForm({ ...form, gallery_images: form.gallery_images.filter((_, i) => i !== index) });
   };
 
+  const handleMainImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 3 * 1024 * 1024) {
+      setError('La imagen no debe superar los 3 MB.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setForm((prev) => ({ ...prev, image_url: reader.result as string }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleGalleryImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+    const newImages: string[] = [];
+    let processed = 0;
+    files.forEach((file) => {
+      if (file.size > 3 * 1024 * 1024) {
+        setError('Cada imagen no debe superar los 3 MB.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        newImages.push(reader.result as string);
+        processed++;
+        if (processed === files.length) {
+          setForm((prev) => ({ ...prev, gallery_images: [...prev.gallery_images, ...newImages] }));
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -227,31 +263,49 @@ export default function ProjectsManager() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-700 mb-1.5">URL de Imagen Principal *</label>
+                  <label className="block text-sm font-medium text-charcoal-700 mb-1.5">Imagen Principal *</label>
+                  <p className="text-charcoal-400 text-xs mb-3">Medidas recomendadas: 1200 x 800 px · Formato: PNG o JPG</p>
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="aspect-video w-40 overflow-hidden bg-charcoal-100 border border-charcoal-200 flex items-center justify-center flex-shrink-0">
+                      <img src={form.image_url || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDgwMCIgd2lkdGg9IjEyMDAiIGhlaWdodD0iODAwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9IiNjZWNlY2UiLz48dGV4dCB4PSI2MDAiIHk9IjQwMCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjEyMDB4ODAwPC90ZXh0Pjwvc3ZnPg=='} alt="Preview" className="w-full h-full object-cover" />
+                    </div>
+                    <label className="cursor-pointer">
+                      <input type="file" accept="image/png,image/jpeg,image/svg+xml" onChange={handleMainImageUpload} className="hidden" />
+                      <div className="flex items-center justify-center gap-2 border border-charcoal-200 px-4 py-2.5 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors">
+                        <Upload className="w-4 h-4" strokeWidth={1.5} />
+                        Subir imagen
+                      </div>
+                    </label>
+                  </div>
                   <input
                     type="url"
-                    value={form.image_url}
+                    value={form.image_url.startsWith('data:') ? '' : form.image_url}
                     onChange={(e) => setForm({ ...form, image_url: e.target.value })}
                     className="input-field"
-                    placeholder="https://..."
+                    placeholder="O pega una URL: https://..."
                   />
-                  {form.image_url && (
-                    <div className="mt-3 aspect-video bg-charcoal-100 overflow-hidden">
-                      <img src={form.image_url} alt="Preview" className="w-full h-full object-cover" />
-                    </div>
-                  )}
                 </div>
 
                 {/* Gallery images */}
                 <div>
                   <label className="block text-sm font-medium text-charcoal-700 mb-1.5">Galería de Imágenes</label>
+                  <p className="text-charcoal-400 text-xs mb-3">Medidas recomendadas: 1200 x 800 px · Formato: PNG o JPG</p>
+                  <div className="flex gap-2 mb-3">
+                    <label className="cursor-pointer">
+                      <input type="file" accept="image/png,image/jpeg,image/svg+xml" multiple onChange={handleGalleryImageUpload} className="hidden" />
+                      <div className="flex items-center justify-center gap-2 border border-charcoal-200 px-4 py-2 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors">
+                        <Upload className="w-4 h-4" strokeWidth={1.5} />
+                        Subir imágenes
+                      </div>
+                    </label>
+                  </div>
                   <div className="flex gap-2">
                     <input
                       type="url"
                       value={newImageUrl}
                       onChange={(e) => setNewImageUrl(e.target.value)}
                       className="input-field flex-1"
-                      placeholder="https://..."
+                      placeholder="O pega una URL: https://..."
                       onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addGalleryImage(); } }}
                     />
                     <button

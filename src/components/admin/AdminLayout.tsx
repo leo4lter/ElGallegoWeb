@@ -10,10 +10,11 @@ import {
   Menu,
   X,
   ExternalLink,
+  Settings,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
-export type AdminSection = 'dashboard' | 'projects' | 'clients' | 'equipment';
+export type AdminSection = 'dashboard' | 'projects' | 'clients' | 'equipment' | 'settings';
 
 type SidebarProps = {
   active: AdminSection;
@@ -32,6 +33,7 @@ const navItems: NavItem[] = [
   { id: 'projects', label: 'Proyectos', icon: Building2 },
   { id: 'clients', label: 'Clientes', icon: HardHat },
   { id: 'equipment', label: 'Equipamiento', icon: Wrench },
+  { id: 'settings', label: 'Configuración', icon: Settings },
 ];
 
 function SidebarContent({ active, onNavigate, onLogout }: SidebarProps) {

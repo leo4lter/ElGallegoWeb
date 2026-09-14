@@ -1,0 +1,144 @@
+import { useState } from 'react';
+import { Upload, AlertCircle, Check } from 'lucide-react';
+
+const LOGO_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNjZWNlY2UiLz48dGV4dCB4PSIxMDAiIHk9IjEwNSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxvZ28gMjAweDIwMCAuUE5HIC8gLlNWRzwvdGV4dD48L3N2Zz4=';
+const FAVICON_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNjZWNlY2UiLz48dGV4dCB4PSIzMiIgeT0iMzciIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj42NHg2NDwvdGV4dD48L3N2Zz4=';
+
+type ImageConfig = {
+  key: 'logo' | 'favicon';
+  label: string;
+  description: string;
+  dimensions: string;
+  formats: string;
+  placeholder: string;
+  previewSize: number;
+};
+
+const imageConfigs: ImageConfig[] = [
+  {
+    key: 'logo',
+    label: 'Logo del Sitio',
+    description: 'Aparece en la barra de navegación y en el pie de página.',
+    dimensions: '200 x 56 px',
+    formats: 'PNG o SVG',
+    placeholder: LOGO_PLACEHOLDER,
+    previewSize: 120,
+  },
+  {
+    key: 'favicon',
+    label: 'Icono del Sitio (Favicon)',
+    description: 'Aparece en la pestaña del navegador.',
+    dimensions: '64 x 64 px',
+    formats: 'SVG o PNG',
+    placeholder: FAVICON_PLACEHOLDER,
+    previewSize: 64,
+  },
+];
+
+export default function SiteSettings() {
+  const [images, setImages] = useState<Record<string, string>>({
+    logo: '',
+    favicon: '',
+  });
+  const [error, setError] = useState('');
+  const [saved, setSaved] = useState(false);
+
+  const handleFileUpload = (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      setError('La imagen no debe superar los 2 MB.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImages((prev) => ({ ...prev, [key]: reader.result as string }));
+      setError('');
+      setSaved(false);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSave = () => {
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+  };
+
+  return (
+    <div>
+      <div className="mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-charcoal-900">Configuración del Sitio</h1>
+        <p className="text-charcoal-500 mt-1">Sube el logo y el favicon que aparecen en la página.</p>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-6 mb-8">
+        {imageConfigs.map((config) => (
+          <div key={config.key} className="admin-card p-6">
+            <h3 className="text-base font-bold text-charcoal-900 mb-1">{config.label}</h3>
+            <p className="text-charcoal-500 text-sm mb-4">{config.description}</p>
+
+            <div className="flex items-center gap-5 mb-4">
+              <div
+                className="overflow-hidden bg-charcoal-100 border border-charcoal-200 flex items-center justify-center flex-shrink-0"
+                style={{ width: config.previewSize, height: config.previewSize }}
+              >
+                <img
+                  src={images[config.key] || config.placeholder}
+                  alt={config.label}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div className="flex-1">
+                <div className="bg-charcoal-50 border border-dashed border-charcoal-300 px-4 py-3 mb-2">
+                  <p className="text-charcoal-400 text-xs font-medium">
+                    Medidas: {config.dimensions}
+                  </p>
+                  <p className="text-charcoal-400 text-xs">
+                    Formato: {config.formats}
+                  </p>
+                </div>
+                <label className="cursor-pointer block">
+                  <input
+                    type="file"
+                    accept="image/png,image/svg+xml,image/jpeg"
+                    onChange={(e) => handleFileUpload(config.key, e)}
+                    className="hidden"
+                  />
+                  <div className="flex items-center justify-center gap-2 border border-charcoal-200 py-2.5 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors">
+                    <Upload className="w-4 h-4" strokeWidth={1.5} />
+                    Subir imagen
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {images[config.key] && (
+              <p className="text-green-600 text-xs flex items-center gap-1.5">
+                <Check className="w-3.5 h-3.5" strokeWidth={1.5} />
+                Imagen cargada (guarda para aplicar los cambios)
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {error && (
+        <div className="flex items-center gap-2 text-red-600 text-sm mb-4">
+          <AlertCircle className="w-4 h-4 flex-shrink-0" strokeWidth={1.5} />
+          {error}
+        </div>
+      )}
+
+      <button onClick={handleSave} className="btn-primary text-sm py-2.5 px-5">
+        {saved ? (
+          <span className="inline-flex items-center gap-2">
+            <Check className="w-4 h-4" strokeWidth={1.5} />
+            Guardado
+          </span>
+        ) : (
+          'Guardar cambios'
+        )}
+      </button>
+    </div>
+  );
+}

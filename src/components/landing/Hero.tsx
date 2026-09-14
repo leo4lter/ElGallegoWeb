@@ -49,7 +49,7 @@ export default function Hero() {
               Nuestros Servicios
             </a>
             <a
-              href="#contacto"
+              href="mailto:contacto@constructoraelgallego.com.ar"
               className="inline-flex items-center justify-center gap-2 border-2 border-white/70 text-white font-semibold px-7 py-3.5 hover:bg-white hover:text-charcoal-800 transition-all duration-300"
             >
               Contáctanos

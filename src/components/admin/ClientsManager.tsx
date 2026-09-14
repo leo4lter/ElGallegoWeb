@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useData } from '@/context/DataContext';
 import type { Client } from '@/lib/supabase';
-import { Plus, Pencil, Trash2, X, AlertCircle } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, AlertCircle, Upload } from 'lucide-react';
 
 const emptyForm: Omit<Client, 'id' | 'created_at'> = {
   name: '',
   logo_url: '',
 };
+
+const LOGO_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNjZWNlY2UiLz48dGV4dCB4PSIxMDAiIHk9IjEwNSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxvZ28gMjAweDIwMCAuUE5HIC8gLlNWRzwvdGV4dD48L3N2Zz4=';
 
 export default function ClientsManager() {
   const { clients, addClient, updateClient, deleteClient, loading } = useData();
@@ -31,10 +33,24 @@ export default function ClientsManager() {
     setError('');
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      setError('La imagen no debe superar los 2 MB.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setForm((prev) => ({ ...prev, logo_url: reader.result as string }));
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim() || !form.logo_url.trim()) {
-      setError('El nombre y la URL del logo son obligatorios.');
+      setError('El nombre y el logo son obligatorios.');
       return;
     }
     setSaving(true);
@@ -144,19 +160,43 @@ export default function ClientsManager() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-700 mb-1.5">URL del Logo *</label>
-                  <input
-                    type="url"
-                    value={form.logo_url}
-                    onChange={(e) => setForm({ ...form, logo_url: e.target.value })}
-                    className="input-field"
-                    placeholder="https://..."
-                  />
-                  {form.logo_url && (
-                    <div className="mt-3 w-20 h-20 overflow-hidden bg-charcoal-100">
-                      <img src={form.logo_url} alt="Preview" className="w-full h-full object-cover" />
+                  <label className="block text-sm font-medium text-charcoal-700 mb-1.5">
+                    Logo del Cliente *
+                  </label>
+                  <p className="text-charcoal-400 text-xs mb-3">
+                    Medidas recomendadas: 200 x 200 px · Formato: PNG o SVG
+                  </p>
+                  <div className="flex items-center gap-4">
+                    <div className="w-20 h-20 overflow-hidden bg-charcoal-100 border border-charcoal-200 flex items-center justify-center flex-shrink-0">
+                      <img
+                        src={form.logo_url || LOGO_PLACEHOLDER}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                  )}
+                    <label className="flex-1 cursor-pointer">
+                      <input
+                        type="file"
+                        accept="image/png,image/svg+xml,image/jpeg"
+                        onChange={handleFileUpload}
+                        className="hidden"
+                      />
+                      <div className="flex items-center justify-center gap-2 border border-charcoal-200 py-3 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors">
+                        <Upload className="w-4 h-4" strokeWidth={1.5} />
+                        Subir imagen
+                      </div>
+                    </label>
+                  </div>
+                  <div className="mt-3">
+                    <p className="text-charcoal-400 text-xs mb-1">O pega una URL:</p>
+                    <input
+                      type="url"
+                      value={form.logo_url.startsWith('data:') ? '' : form.logo_url}
+                      onChange={(e) => setForm({ ...form, logo_url: e.target.value })}
+                      className="input-field"
+                      placeholder="https://..."
+                    />
+                  </div>
                 </div>
 
                 {error && (
