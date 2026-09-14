@@ -1,28 +1,14 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useData } from '@/context/DataContext';
 import type { Project } from '@/lib/supabase';
 import { X, ImageIcon, MapPin, Calendar, User, Layers, ChevronLeft, ChevronRight } from 'lucide-react';
 
-type GalleryProps = {
-  externalFilter: string | null;
-  onFilterConsumed: () => void;
-};
-
-export default function Gallery({ externalFilter, onFilterConsumed }: GalleryProps) {
+export default function Gallery() {
   const { projects, loading } = useData();
   const [filter, setFilter] = useState('Todos');
   const [selected, setSelected] = useState<string | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-
-  useEffect(() => {
-    if (externalFilter) {
-      setFilter(externalFilter);
-      onFilterConsumed();
-      const el = document.getElementById('galeria');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [externalFilter, onFilterConsumed]);
 
   const categories = useMemo(() => {
     const cats = new Set(projects.map((p) => p.category));
@@ -72,21 +58,13 @@ export default function Gallery({ externalFilter, onFilterConsumed }: GalleryPro
           <div className="flex items-center justify-center gap-3 mb-5">
             <div className="w-10 h-px bg-terracotta-500" />
             <span className="text-terracotta-500 text-sm font-semibold tracking-widest uppercase">
-              {filter !== 'Todos' ? `Proyectos · ${filter}` : 'Galería de Proyectos'}
+              Galería de Proyectos
             </span>
             <div className="w-10 h-px bg-terracotta-500" />
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl text-charcoal-900">
             Obras que hablan por nosotros
           </h2>
-          {filter !== 'Todos' && (
-            <button
-              onClick={() => setFilter('Todos')}
-              className="mt-4 text-terracotta-600 font-medium text-sm hover:text-terracotta-700 transition-colors"
-            >
-              &larr; Ver todos los proyectos
-            </button>
-          )}
         </motion.div>
 
         {loading ? (
@@ -220,7 +198,6 @@ function ProjectModal({
           <X className="w-5 h-5" strokeWidth={1.5} />
         </button>
 
-        {/* Main image with navigation */}
         <div className="relative h-72 sm:h-96 overflow-hidden bg-charcoal-100">
           <img
             src={galleryImages[lightboxIndex]}
@@ -251,7 +228,6 @@ function ProjectModal({
           )}
         </div>
 
-        {/* Thumbnail strip */}
         {galleryImages.length > 1 && (
           <div className="flex gap-2 px-6 pt-4 overflow-x-auto">
             {galleryImages.map((img, i) => (
@@ -268,7 +244,6 @@ function ProjectModal({
           </div>
         )}
 
-        {/* Project info */}
         <div className="p-6 sm:p-8">
           <span className="text-terracotta-500 text-xs font-semibold tracking-widest uppercase">
             {project.category}

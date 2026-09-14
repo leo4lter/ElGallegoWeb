@@ -3,9 +3,9 @@ import { CheckCircle2 } from 'lucide-react';
 
 const highlights = [
   'Empresa 100% local',
-  '18 años de trayectoria en construcción',
   'Soluciones para entidades privadas y públicas',
   'Oportunidades de empleo y formación para jóvenes de la localidad',
+  'Adaptables a distintas escalas de proyecto',
 ];
 
 export default function About() {
@@ -30,9 +30,9 @@ export default function About() {
             </h2>
             <p className="text-charcoal-600 text-lg leading-relaxed mb-8">
               Somos una empresa 100% local, con una trayectoria de 18 años en el
-              rubro de la construcción. Brindamos soluciones reales tanto a
-              entidades privadas como públicas, generando oportunidades de empleo
-              y formando a los jóvenes de nuestra localidad.
+              rubro de la construcción. Continuidad operativa, conocimiento del
+              territorio y capacidad de respuesta inmediata. Adaptables a distintas
+              escalas de proyecto.
             </p>
             <ul className="space-y-3">
               {highlights.map((item, i) => (

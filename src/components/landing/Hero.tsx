@@ -32,13 +32,15 @@ export default function Hero() {
           </div>
 
           <h1 className="text-white text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] mb-6">
-            Constructora El Gallego
+            Construyendo el <span className="text-terracotta-400">futuro</span> con{' '}
+            <span className="text-terracotta-400">solidez y proyección</span>
           </h1>
 
           <p className="text-white/85 text-lg sm:text-xl leading-relaxed max-w-2xl mb-10">
-            Empresa 100% local con 18 años de trayectoria en construcción.
-            Soluciones reales para entidades privadas y públicas, generando
-            empleo y formación para los jóvenes de Sierra Grande.
+            Constructora El Gallego, empresa 100% local con 18 años de trayectoria
+            en construcción. Ofreciendo soluciones reales para entidades privadas
+            y públicas, generando empleo y formación para los jóvenes de Sierra
+            Grande.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">

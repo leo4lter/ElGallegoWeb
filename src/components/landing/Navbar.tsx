@@ -5,6 +5,7 @@ import { Menu, X, HardHat } from 'lucide-react';
 
 const navLinks = [
   { label: 'Nosotros', href: '#nosotros' },
+  { label: 'Áreas de Trabajo', href: '#areas' },
   { label: 'Servicios', href: '#servicios' },
   { label: 'Capacidad', href: '#capacidad' },
   { label: 'Proyectos', href: '#galeria' },
