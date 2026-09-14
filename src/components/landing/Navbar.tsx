@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import LogoPlaceholder from '@/components/landing/LogoPlaceholder';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 const navLinks = [
   { label: 'Nosotros', href: '#nosotros' },
@@ -16,6 +17,14 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { logoUrl } = useSiteSettings();
+
+  const renderLogo = (size: number, variant: 'light' | 'dark') =>
+    logoUrl ? (
+      <img src={logoUrl} alt="Constructora El Gallego" style={{ height: size, width: 'auto' }} className="object-contain" />
+    ) : (
+      <LogoPlaceholder size={size} variant={variant} />
+    );
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -37,10 +46,7 @@ export default function Navbar() {
       >
         <div className="max-w-8xl mx-auto container-px flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5 group">
-            <LogoPlaceholder
-              size={28}
-              variant={scrolled ? 'dark' : 'light'}
-            />
+            {renderLogo(28, scrolled ? 'dark' : 'light')}
             <span
               className={`font-display font-bold text-lg tracking-tight transition-colors ${
                 scrolled ? 'text-charcoal-800' : 'text-white'
@@ -97,7 +103,7 @@ export default function Navbar() {
             >
               <div className="flex items-center justify-between px-6 py-5 border-b border-charcoal-100">
                 <div className="flex items-center gap-2.5">
-                  <LogoPlaceholder size={24} variant="dark" />
+                  {renderLogo(24, 'dark')}
                   <span className="font-display font-bold text-charcoal-800">El Gallego</span>
                 </div>
                 <button

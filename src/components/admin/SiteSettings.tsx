@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Upload, AlertCircle, Check } from 'lucide-react';
+import { uploadImage, getSiteSettings, saveSiteSettings } from '@/lib/supabase';
 
 const LOGO_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNjZWNlY2UiLz48dGV4dCB4PSIxMDAiIHk9IjEwNSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkxvZ28gMjAweDIwMCAuUE5HIC8gLlNWRzwvdGV4dD48L3N2Zz4=';
 const FAVICON_PLACEHOLDER = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNjZWNlY2UiLz48dGV4dCB4PSIzMiIgeT0iMzciIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj42NHg2NDwvdGV4dD48L3N2Zz4=';
@@ -40,29 +41,76 @@ export default function SiteSettings() {
     logo: '',
     favicon: '',
   });
+  const [originalUrls, setOriginalUrls] = useState<Record<string, string | null>>({
+    logo: null,
+    favicon: null,
+  });
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [uploadingKey, setUploadingKey] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleFileUpload = (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    (async () => {
+      try {
+        const settings = await getSiteSettings();
+        setImages({
+          logo: settings.logo_url || '',
+          favicon: settings.favicon_url || '',
+        });
+        setOriginalUrls({
+          logo: settings.logo_url,
+          favicon: settings.favicon_url,
+        });
+      } catch {
+        // ignore — use defaults
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const handleFileUpload = async (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
       setError('La imagen no debe superar los 2 MB.');
       return;
     }
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImages((prev) => ({ ...prev, [key]: reader.result as string }));
-      setError('');
-      setSaved(false);
-    };
-    reader.readAsDataURL(file);
+    setUploadingKey(key);
+    setError('');
+    try {
+      const url = await uploadImage(file, 'site');
+      if (url) {
+        setImages((prev) => ({ ...prev, [key]: url }));
+        setSaved(false);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al subir la imagen');
+    } finally {
+      setUploadingKey(null);
+    }
   };
 
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+  const handleSave = async () => {
+    setSaving(true);
+    setError('');
+    try {
+      await saveSiteSettings(images.logo || null, images.favicon || null);
+      setOriginalUrls({ logo: images.logo || null, favicon: images.favicon || null });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al guardar');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (loading) {
+    return <div className="text-charcoal-400 text-center py-16">Cargando configuración...</div>;
+  }
 
   return (
     <div>
@@ -106,16 +154,22 @@ export default function SiteSettings() {
                   />
                   <div className="flex items-center justify-center gap-2 border border-charcoal-200 py-2.5 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors">
                     <Upload className="w-4 h-4" strokeWidth={1.5} />
-                    Subir imagen
+                    {uploadingKey === config.key ? 'Subiendo...' : 'Subir imagen'}
                   </div>
                 </label>
               </div>
             </div>
 
-            {images[config.key] && (
+            {images[config.key] && images[config.key] !== originalUrls[config.key] && (
+              <p className="text-amber-600 text-xs flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                Imagen cargada (guarda para aplicar los cambios)
+              </p>
+            )}
+            {originalUrls[config.key] && images[config.key] === originalUrls[config.key] && (
               <p className="text-green-600 text-xs flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5" strokeWidth={1.5} />
-                Imagen cargada (guarda para aplicar los cambios)
+                Imagen guardada en el servidor
               </p>
             )}
           </div>
@@ -129,15 +183,13 @@ export default function SiteSettings() {
         </div>
       )}
 
-      <button onClick={handleSave} className="btn-primary text-sm py-2.5 px-5">
+      <button onClick={handleSave} disabled={saving} className="btn-primary text-sm py-2.5 px-5 disabled:opacity-50">
         {saved ? (
           <span className="inline-flex items-center gap-2">
             <Check className="w-4 h-4" strokeWidth={1.5} />
             Guardado
           </span>
-        ) : (
-          'Guardar cambios'
-        )}
+        ) : saving ? 'Guardando...' : 'Guardar cambios'}
       </button>
     </div>
   );

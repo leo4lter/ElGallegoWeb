@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, User, ArrowUp, Mail, Send } from 'lucide-react';
 import LogoPlaceholder from '@/components/landing/LogoPlaceholder';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 const WHATSAPP_NUMBER = '5492920548971';
 
@@ -9,6 +10,14 @@ export default function Footer() {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [sent, setSent] = useState(false);
+  const { logoUrl } = useSiteSettings();
+
+  const renderLogo = (size: number) =>
+    logoUrl ? (
+      <img src={logoUrl} alt="Constructora El Gallego" style={{ height: size, width: 'auto' }} className="object-contain" />
+    ) : (
+      <LogoPlaceholder size={size} variant="light" />
+    );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +41,7 @@ export default function Footer() {
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center gap-2.5 mb-5">
-              <LogoPlaceholder size={32} variant="light" />
+              {renderLogo(32)}
               <span className="font-display font-bold text-xl">Constructora El Gallego</span>
             </div>
             <p className="text-white/60 leading-relaxed max-w-sm">

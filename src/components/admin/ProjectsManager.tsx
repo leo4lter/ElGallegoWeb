@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useData } from '@/context/DataContext';
-import type { Project } from '@/lib/supabase';
+import { uploadImage, type Project } from '@/lib/supabase';
 import { Plus, Pencil, Trash2, X, AlertCircle, ImagePlus, Trash, Upload } from 'lucide-react';
 
 const SERVICE_CATEGORIES = [
@@ -116,40 +116,53 @@ export default function ProjectsManager() {
     setForm({ ...form, gallery_images: form.gallery_images.filter((_, i) => i !== index) });
   };
 
-  const handleMainImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [uploadingMain, setUploadingMain] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
+
+  const handleMainImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 3 * 1024 * 1024) {
       setError('La imagen no debe superar los 3 MB.');
       return;
     }
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setForm((prev) => ({ ...prev, image_url: reader.result as string }));
-    };
-    reader.readAsDataURL(file);
+    setUploadingMain(true);
+    setError('');
+    try {
+      const url = await uploadImage(file, 'projects');
+      if (url) {
+        setForm((prev) => ({ ...prev, image_url: url }));
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al subir la imagen');
+    } finally {
+      setUploadingMain(false);
+    }
   };
 
-  const handleGalleryImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGalleryImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
-    const newImages: string[] = [];
-    let processed = 0;
-    files.forEach((file) => {
-      if (file.size > 3 * 1024 * 1024) {
-        setError('Cada imagen no debe superar los 3 MB.');
-        return;
-      }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        newImages.push(reader.result as string);
-        processed++;
-        if (processed === files.length) {
-          setForm((prev) => ({ ...prev, gallery_images: [...prev.gallery_images, ...newImages] }));
+    setUploadingGallery(true);
+    setError('');
+    try {
+      const urls: string[] = [];
+      for (const file of files) {
+        if (file.size > 3 * 1024 * 1024) {
+          setError('Cada imagen no debe superar los 3 MB.');
+          continue;
         }
-      };
-      reader.readAsDataURL(file);
-    });
+        const url = await uploadImage(file, 'projects');
+        if (url) urls.push(url);
+      }
+      if (urls.length > 0) {
+        setForm((prev) => ({ ...prev, gallery_images: [...prev.gallery_images, ...urls] }));
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al subir las imágenes');
+    } finally {
+      setUploadingGallery(false);
+    }
   };
 
   return (
@@ -273,13 +286,13 @@ export default function ProjectsManager() {
                       <input type="file" accept="image/png,image/jpeg,image/svg+xml" onChange={handleMainImageUpload} className="hidden" />
                       <div className="flex items-center justify-center gap-2 border border-charcoal-200 px-4 py-2.5 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors">
                         <Upload className="w-4 h-4" strokeWidth={1.5} />
-                        Subir imagen
+                        {uploadingMain ? 'Subiendo...' : 'Subir imagen'}
                       </div>
                     </label>
                   </div>
                   <input
                     type="url"
-                    value={form.image_url.startsWith('data:') ? '' : form.image_url}
+                    value={form.image_url}
                     onChange={(e) => setForm({ ...form, image_url: e.target.value })}
                     className="input-field"
                     placeholder="O pega una URL: https://..."
@@ -295,7 +308,7 @@ export default function ProjectsManager() {
                       <input type="file" accept="image/png,image/jpeg,image/svg+xml" multiple onChange={handleGalleryImageUpload} className="hidden" />
                       <div className="flex items-center justify-center gap-2 border border-charcoal-200 px-4 py-2 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors">
                         <Upload className="w-4 h-4" strokeWidth={1.5} />
-                        Subir imágenes
+                        {uploadingGallery ? 'Subiendo...' : 'Subir imágenes'}
                       </div>
                     </label>
                   </div>

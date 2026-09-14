@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useData } from '@/context/DataContext';
-import type { Client } from '@/lib/supabase';
+import { uploadImage, type Client } from '@/lib/supabase';
 import { Plus, Pencil, Trash2, X, AlertCircle, Upload } from 'lucide-react';
 
 const emptyForm: Omit<Client, 'id' | 'created_at'> = {
@@ -33,18 +33,27 @@ export default function ClientsManager() {
     setError('');
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
       setError('La imagen no debe superar los 2 MB.');
       return;
     }
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setForm((prev) => ({ ...prev, logo_url: reader.result as string }));
-    };
-    reader.readAsDataURL(file);
+    setUploading(true);
+    setError('');
+    try {
+      const url = await uploadImage(file, 'clients');
+      if (url) {
+        setForm((prev) => ({ ...prev, logo_url: url }));
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al subir la imagen');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -183,7 +192,7 @@ export default function ClientsManager() {
                       />
                       <div className="flex items-center justify-center gap-2 border border-charcoal-200 py-3 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors">
                         <Upload className="w-4 h-4" strokeWidth={1.5} />
-                        Subir imagen
+                        {uploading ? 'Subiendo...' : 'Subir imagen'}
                       </div>
                     </label>
                   </div>
@@ -191,7 +200,7 @@ export default function ClientsManager() {
                     <p className="text-charcoal-400 text-xs mb-1">O pega una URL:</p>
                     <input
                       type="url"
-                      value={form.logo_url.startsWith('data:') ? '' : form.logo_url}
+                      value={form.logo_url}
                       onChange={(e) => setForm({ ...form, logo_url: e.target.value })}
                       className="input-field"
                       placeholder="https://..."

@@ -276,6 +276,46 @@ if (supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('http')) {
   }
 }
 
+export const storage = realClient?.storage ?? null;
+
+export async function uploadImage(
+  file: File,
+  folder: string,
+): Promise<string | null> {
+  if (!realClient) {
+    throw new Error('Supabase no está configurado. No se puede subir la imagen al servidor.');
+  }
+  const ext = file.name.split('.').pop() || 'png';
+  const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const { error: uploadError } = await realClient.storage
+    .from('site-images')
+    .upload(fileName, file, { cacheControl: '3600', upsert: false });
+  if (uploadError) throw new Error(`Error al subir imagen: ${uploadError.message}`);
+  const { data: urlData } = realClient.storage
+    .from('site-images')
+    .getPublicUrl(fileName);
+  return urlData.publicUrl;
+}
+
+export async function getSiteSettings(): Promise<{ logo_url: string | null; favicon_url: string | null }> {
+  if (!realClient) return { logo_url: null, favicon_url: null };
+  const { data, error } = await realClient
+    .from('site_settings')
+    .select('logo_url, favicon_url')
+    .eq('id', 1)
+    .maybeSingle();
+  if (error) return { logo_url: null, favicon_url: null };
+  return { logo_url: data?.logo_url ?? null, favicon_url: data?.favicon_url ?? null };
+}
+
+export async function saveSiteSettings(logo_url: string | null, favicon_url: string | null): Promise<void> {
+  if (!realClient) throw new Error('Supabase no está configurado.');
+  const { error } = await realClient
+    .from('site_settings')
+    .upsert({ id: 1, logo_url, favicon_url, updated_at: new Date().toISOString() });
+  if (error) throw new Error(`Error al guardar configuración: ${error.message}`);
+}
+
 const localMock = createLocalMock();
 
 export const supabase = {

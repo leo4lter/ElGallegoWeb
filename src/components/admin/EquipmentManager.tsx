@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useData } from '@/context/DataContext';
-import type { Equipment } from '@/lib/supabase';
-import { Plus, Pencil, Trash2, X, AlertCircle } from 'lucide-react';
+import { uploadImage, type Equipment } from '@/lib/supabase';
+import { Plus, Pencil, Trash2, X, AlertCircle, Upload } from 'lucide-react';
 
 const emptyForm: Omit<Equipment, 'id' | 'created_at'> = {
   name: '',
@@ -17,6 +17,7 @@ export default function EquipmentManager() {
   const [form, setForm] = useState(emptyForm);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const openCreate = () => {
     setForm(emptyForm);
@@ -61,6 +62,27 @@ export default function EquipmentManager() {
       await deleteEquipment(id);
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Error al eliminar');
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 3 * 1024 * 1024) {
+      setError('La imagen no debe superar los 3 MB.');
+      return;
+    }
+    setUploading(true);
+    setError('');
+    try {
+      const url = await uploadImage(file, 'equipment');
+      if (url) {
+        setForm((prev) => ({ ...prev, image_url: url }));
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al subir la imagen');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -157,19 +179,27 @@ export default function EquipmentManager() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-700 mb-1.5">URL de Imagen *</label>
+                  <label className="block text-sm font-medium text-charcoal-700 mb-1.5">Imagen *</label>
+                  <p className="text-charcoal-400 text-xs mb-3">Medidas recomendadas: 1200 x 800 px · Formato: PNG o JPG</p>
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="aspect-video w-40 overflow-hidden bg-charcoal-100 border border-charcoal-200 flex items-center justify-center flex-shrink-0">
+                      <img src={form.image_url || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTIwIj48cmVjdCB3aWR0aD0iMTYwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iI2NlY2VjZSIvPjx0ZXh0IHg9IjgwIiB5PSI2MCIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UHJldmlldzwvdGV4dD48L3N2Zz4='} alt="Preview" className="w-full h-full object-cover" />
+                    </div>
+                    <label className="cursor-pointer">
+                      <input type="file" accept="image/png,image/jpeg,image/svg+xml" onChange={handleFileUpload} className="hidden" />
+                      <div className="flex items-center justify-center gap-2 border border-charcoal-200 px-4 py-2.5 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors">
+                        <Upload className="w-4 h-4" strokeWidth={1.5} />
+                        {uploading ? 'Subiendo...' : 'Subir imagen'}
+                      </div>
+                    </label>
+                  </div>
                   <input
                     type="url"
                     value={form.image_url}
                     onChange={(e) => setForm({ ...form, image_url: e.target.value })}
                     className="input-field"
-                    placeholder="https://..."
+                    placeholder="O pega una URL: https://..."
                   />
-                  {form.image_url && (
-                    <div className="mt-3 aspect-video bg-charcoal-100 overflow-hidden">
-                      <img src={form.image_url} alt="Preview" className="w-full h-full object-cover" />
-                    </div>
-                  )}
                 </div>
 
                 {error && (
