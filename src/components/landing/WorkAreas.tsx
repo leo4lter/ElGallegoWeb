@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import {
-  Road,
+  Route,
   Building2,
   Droplets,
   Layers,
@@ -16,7 +16,7 @@ type WorkArea = {
 
 const areas: WorkArea[] = [
   {
-    icon: Road,
+    icon: Route,
     title: 'Obras Viales',
     description:
       'Conectividad que resiste el paso del tiempo. Construcción, pavimentación y mejora de caminos con los más altos estándares de calidad. Garantizamos durabilidad y un rendimiento óptimo, incluso frente a las condiciones de tránsito y clima más exigentes.',
