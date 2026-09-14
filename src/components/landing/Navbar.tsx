@@ -19,11 +19,11 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { logoUrl } = useSiteSettings();
 
-  const renderLogo = (size: number, variant: 'light' | 'dark') =>
+  const renderLogo = (height: number, variant: 'light' | 'dark') =>
     logoUrl ? (
-      <img src={logoUrl} alt="Constructora El Gallego" style={{ height: size, width: 'auto' }} className="object-contain" />
+      <img src={logoUrl} alt="Constructora El Gallego" style={{ height, width: 'auto', maxWidth: 220 }} className="object-contain transition-all duration-300" />
     ) : (
-      <LogoPlaceholder size={size} variant={variant} />
+      <LogoPlaceholder size={height} variant={variant} />
     );
 
   useEffect(() => {
@@ -45,15 +45,8 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-8xl mx-auto container-px flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5 group">
-            {renderLogo(28, scrolled ? 'dark' : 'light')}
-            <span
-              className={`font-display font-bold text-lg tracking-tight transition-colors ${
-                scrolled ? 'text-charcoal-800' : 'text-white'
-              }`}
-            >
-              El Gallego
-            </span>
+          <Link to="/" className="flex items-center group">
+            {renderLogo(scrolled ? 40 : 48, scrolled ? 'dark' : 'light')}
           </Link>
 
           <nav className="hidden lg:flex items-center gap-8">
@@ -102,9 +95,8 @@ export default function Navbar() {
               className="absolute right-0 top-0 bottom-0 w-80 max-w-[85%] bg-white flex flex-col"
             >
               <div className="flex items-center justify-between px-6 py-5 border-b border-charcoal-100">
-                <div className="flex items-center gap-2.5">
-                  {renderLogo(24, 'dark')}
-                  <span className="font-display font-bold text-charcoal-800">El Gallego</span>
+                <div className="flex items-center">
+                  {renderLogo(40, 'dark')}
                 </div>
                 <button
                   onClick={() => setMobileOpen(false)}

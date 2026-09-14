@@ -12,11 +12,11 @@ export default function Footer() {
   const [sent, setSent] = useState(false);
   const { logoUrl } = useSiteSettings();
 
-  const renderLogo = (size: number) =>
+  const renderLogo = (height: number) =>
     logoUrl ? (
-      <img src={logoUrl} alt="Constructora El Gallego" style={{ height: size, width: 'auto' }} className="object-contain" />
+      <img src={logoUrl} alt="Constructora El Gallego" style={{ height, width: 'auto', maxWidth: 280 }} className="object-contain" />
     ) : (
-      <LogoPlaceholder size={size} variant="light" />
+      <LogoPlaceholder size={height} variant="light" />
     );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -40,9 +40,8 @@ export default function Footer() {
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.6 }}
           >
-            <div className="flex items-center gap-2.5 mb-5">
-              {renderLogo(32)}
-              <span className="font-display font-bold text-xl">Constructora El Gallego</span>
+            <div className="flex items-center mb-5">
+              {renderLogo(56)}
             </div>
             <p className="text-white/60 leading-relaxed max-w-sm">
               Empresa 100% local con 18 años de trayectoria en construcción.
