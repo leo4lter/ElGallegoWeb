@@ -39,7 +39,7 @@ export const initialProjects: Project[] = [
     title: 'Construcción de Vivienda',
     description: 'Construcción de vivienda familiar con cimientos, estructura y terminaciones completas.',
     image_url: 'https://images.pexels.com/photos/8961343/pexels-photo-8961343.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    category: 'Construcción',
+    category: 'Infraestructura Urbana',
     gallery_images: [
       'https://images.pexels.com/photos/8961343/pexels-photo-8961343.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
       'https://images.pexels.com/photos/8961062/pexels-photo-8961062.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
@@ -56,7 +56,7 @@ export const initialProjects: Project[] = [
     title: 'Remodelación de Espacio Comercial',
     description: 'Remodelación integral de local comercial con pintura, pisos y electricidad.',
     image_url: 'https://images.pexels.com/photos/8961342/pexels-photo-8961342.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    category: 'Remodelaciones',
+    category: 'Infraestructura Urbana',
     gallery_images: [
       'https://images.pexels.com/photos/8961342/pexels-photo-8961342.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
       'https://images.pexels.com/photos/8961086/pexels-photo-8961086.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
@@ -72,7 +72,7 @@ export const initialProjects: Project[] = [
     title: 'Pintura de Edificio Público',
     description: 'Pintura exterior e interior de edificio público municipal.',
     image_url: 'https://images.pexels.com/photos/5690811/pexels-photo-5690811.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    category: 'Pintura',
+    category: 'Obras Viales',
     gallery_images: [
       'https://images.pexels.com/photos/5690811/pexels-photo-5690811.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
       'https://images.pexels.com/photos/5690809/pexels-photo-5690809.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
@@ -88,7 +88,7 @@ export const initialProjects: Project[] = [
     title: 'Transporte de Materiales',
     description: 'Servicio de camiones para transporte de materiales de construcción.',
     image_url: 'https://images.pexels.com/photos/15071423/pexels-photo-15071423.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    category: 'Servicio de Camiones',
+    category: 'Movimiento de Suelos',
     gallery_images: [
       'https://images.pexels.com/photos/15071423/pexels-photo-15071423.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
       'https://images.pexels.com/photos/35846752/pexels-photo-35846752.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
@@ -104,7 +104,7 @@ export const initialProjects: Project[] = [
     title: 'Movimiento de Suelo Urbano',
     description: 'Excavación, relleno y nivelación de terreno para obra civil.',
     image_url: 'https://images.pexels.com/photos/30751525/pexels-photo-30751525.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    category: 'Movimiento de Suelo',
+    category: 'Movimiento de Suelos',
     gallery_images: [
       'https://images.pexels.com/photos/30751525/pexels-photo-30751525.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
       'https://images.pexels.com/photos/37733178/pexels-photo-37733178.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
@@ -120,7 +120,7 @@ export const initialProjects: Project[] = [
     title: 'Construcción de Platea',
     description: 'Platea de hormigón para construcción residencial.',
     image_url: 'https://images.pexels.com/photos/36606410/pexels-photo-36606410.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    category: 'Construcción',
+    category: 'Obras Hidráulicas',
     gallery_images: [
       'https://images.pexels.com/photos/36606410/pexels-photo-36606410.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
       'https://images.pexels.com/photos/37733178/pexels-photo-37733178.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',

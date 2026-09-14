@@ -50,7 +50,7 @@ const areas: WorkArea[] = [
     icon: Factory,
     title: 'Fábrica',
     description:
-      'Producción propia de materiales y elementos para la construcción. Contamos con instalaciones equipadas para fabricar y suministrar insumos de calidad, garantizando trazabilidad, control de costos y tiempos de entrega confiables para cada obra.',
+      'Fábrica de adoquines a moldes artesanales. Próximamente premoldeados y fabricación de naves industriales. Producción propia con instalaciones equipadas para garantizar calidad y tiempos de entrega confiables para cada obra.',
   },
 ];
 

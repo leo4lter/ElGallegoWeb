@@ -3,11 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useData } from '@/context/DataContext';
 import type { Project } from '@/lib/supabase';
 import {
+  Route,
   Building2,
-  HardHat,
-  PaintRoller,
-  Truck,
+  Droplets,
   Layers,
+  Sprout,
+  Factory,
   X,
   MapPin,
   Calendar,
@@ -21,51 +22,39 @@ import type { LucideIcon } from 'lucide-react';
 export type Service = {
   icon: LucideIcon;
   title: string;
-  short: string;
-  description: string;
   category: string;
 };
 
 export const services: Service[] = [
   {
+    icon: Route,
+    title: 'Obras Viales',
+    category: 'Obras Viales',
+  },
+  {
     icon: Building2,
-    title: 'Construcción',
-    short: 'Obras privadas y públicas de cualquier escala.',
-    description:
-      'Ejecutamos obras privadas y públicas de cualquier escala, desde viviendas unifamiliares hasta edificios e infraestructura. Nos ocupamos de cada etapa del proceso: cimientos, estructura, mampostería, terminaciones y entrega. Trabajamos con materiales de primera y mano de obra local calificada, garantizando solidez y durabilidad en cada proyecto.',
-    category: 'Construcción',
+    title: 'Infraestructura Urbana',
+    category: 'Infraestructura Urbana',
   },
   {
-    icon: HardHat,
-    title: 'Remodelaciones',
-    short: 'Renovación y ampliación de espacios existentes.',
-    description:
-      'Renovamos y ampliamos espacios existentes con un enfoque práctico y eficiente. Manejamos desde refacciones menores hasta remodelaciones integrales: pintura, pisos, electricidad, plomería y terminaciones. Nos adaptamos a las necesidades de cada cliente, minimizando tiempos de obra y respetando el espacio habitado.',
-    category: 'Remodelaciones',
-  },
-  {
-    icon: PaintRoller,
-    title: 'Pintura',
-    short: 'Pintura interior y exterior para todo tipo de edificaciones.',
-    description:
-      'Aplicamos pintura interior y exterior en viviendas, comercios y edificios públicos. Preparamos cada superficie con esmero para asegurar un acabado uniforme y duradero. Trabajamos con productos de primera línea y técnicas que garantizan resistencia al clima y al paso del tiempo.',
-    category: 'Pintura',
-  },
-  {
-    icon: Truck,
-    title: 'Servicio de Camiones',
-    short: 'Transporte y logística con flota propia.',
-    description:
-      'Ofrecemos transporte de materiales, áridos y maquinaria con flota de camiones propia. Cubrimos la logística de obra de punta a punta, desde el acopio de materiales hasta el retiro de escombros. Nuestro servicio garantiza respuesta inmediata y abastecimiento continuo, incluso en condiciones operativas exigentes.',
-    category: 'Servicio de Camiones',
+    icon: Droplets,
+    title: 'Obras Hidráulicas',
+    category: 'Obras Hidráulicas',
   },
   {
     icon: Layers,
-    title: 'Movimiento de Suelo',
-    short: 'Excavación, relleno y preparación de terrenos.',
-    description:
-      'Realizamos excavación, relleno, nivelación y compactación de terrenos con maquinaria pesada propia. Preparamos el suelo para plateas, cimientos, caminos y obras civiles, asegurando la estabilidad necesaria para cada tipo de construcción. Optimizamos tiempos y costos con equipamiento y experiencia operativa local.',
-    category: 'Movimiento de Suelo',
+    title: 'Movimiento de Suelos',
+    category: 'Movimiento de Suelos',
+  },
+  {
+    icon: Sprout,
+    title: 'Paisajismo y Sistemas de Riegos',
+    category: 'Paisajismo y Sistemas de Riegos',
+  },
+  {
+    icon: Factory,
+    title: 'Fábrica',
+    category: 'Fábrica',
   },
 ];
 
@@ -75,6 +64,7 @@ const SERVICE_IMAGES = [
   'https://images.pexels.com/photos/5690811/pexels-photo-5690811.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600',
   'https://images.pexels.com/photos/15071423/pexels-photo-15071423.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600',
   'https://images.pexels.com/photos/30751525/pexels-photo-30751525.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600',
+  'https://images.pexels.com/photos/5690811/pexels-photo-5690811.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600',
 ];
 
 export default function Services() {
@@ -173,12 +163,9 @@ export default function Services() {
                       </div>
                       <h3 className="text-2xl text-charcoal-900">{service.title}</h3>
                     </div>
-                    <p className="text-charcoal-500 leading-relaxed text-base">
-                      {service.description}
-                    </p>
                     <button
                       onClick={() => setLightboxCategory(service.category)}
-                      className="inline-flex items-center gap-2 mt-6 text-terracotta-600 font-semibold text-sm hover:gap-3 transition-all duration-300 w-fit"
+                      className="inline-flex items-center gap-2 mt-2 text-terracotta-600 font-semibold text-sm hover:gap-3 transition-all duration-300 w-fit"
                     >
                       Ver proyectos
                       <span aria-hidden>&rarr;</span>

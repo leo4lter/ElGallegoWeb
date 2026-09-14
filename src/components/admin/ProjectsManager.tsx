@@ -5,11 +5,12 @@ import type { Project } from '@/lib/supabase';
 import { Plus, Pencil, Trash2, X, AlertCircle, ImagePlus, Trash } from 'lucide-react';
 
 const SERVICE_CATEGORIES = [
-  'Construcción',
-  'Remodelaciones',
-  'Pintura',
-  'Servicio de Camiones',
-  'Movimiento de Suelo',
+  'Obras Viales',
+  'Infraestructura Urbana',
+  'Obras Hidráulicas',
+  'Movimiento de Suelos',
+  'Paisajismo y Sistemas de Riegos',
+  'Fábrica',
 ];
 
 type FormState = {
@@ -28,7 +29,7 @@ const emptyForm: FormState = {
   title: '',
   description: '',
   image_url: '',
-  category: 'Construcción',
+  category: 'Obras Viales',
   gallery_images: [],
   location: '',
   client: '',
