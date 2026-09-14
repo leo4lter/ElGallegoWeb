@@ -2,49 +2,88 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useData } from '@/context/DataContext';
 import type { Project } from '@/lib/supabase';
-import { Plus, Pencil, Trash2, X, AlertCircle } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, AlertCircle, ImagePlus, Trash } from 'lucide-react';
 
-const emptyForm: Omit<Project, 'id' | 'created_at'> = {
+const SERVICE_CATEGORIES = [
+  'Construcción',
+  'Remodelaciones',
+  'Pintura',
+  'Servicio de Camiones',
+  'Movimiento de Suelo',
+];
+
+type FormState = {
+  title: string;
+  description: string;
+  image_url: string;
+  category: string;
+  gallery_images: string[];
+  location: string;
+  client: string;
+  year: string;
+  scope: string;
+};
+
+const emptyForm: FormState = {
   title: '',
   description: '',
   image_url: '',
-  category: 'Obra Civil',
+  category: 'Construcción',
+  gallery_images: [],
+  location: '',
+  client: '',
+  year: '',
+  scope: '',
 };
 
 export default function ProjectsManager() {
   const { projects, addProject, updateProject, deleteProject, loading } = useData();
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm] = useState<FormState>(emptyForm);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [newImageUrl, setNewImageUrl] = useState('');
 
   const openCreate = () => {
     setForm(emptyForm);
     setEditingId(null);
     setShowForm(true);
     setError('');
+    setNewImageUrl('');
   };
 
   const openEdit = (p: Project) => {
-    setForm({ title: p.title, description: p.description, image_url: p.image_url, category: p.category });
+    setForm({
+      title: p.title,
+      description: p.description,
+      image_url: p.image_url,
+      category: p.category,
+      gallery_images: p.gallery_images || [],
+      location: p.location || '',
+      client: p.client || '',
+      year: p.year || '',
+      scope: p.scope || '',
+    });
     setEditingId(p.id);
     setShowForm(true);
     setError('');
+    setNewImageUrl('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim() || !form.image_url.trim()) {
-      setError('El título y la URL de imagen son obligatorios.');
+      setError('El título y la URL de imagen principal son obligatorios.');
       return;
     }
     setSaving(true);
     try {
+      const payload = { ...form };
       if (editingId) {
-        await updateProject(editingId, form);
+        await updateProject(editingId, payload);
       } else {
-        await addProject(form);
+        await addProject(payload);
       }
       setShowForm(false);
       setForm(emptyForm);
@@ -63,6 +102,17 @@ export default function ProjectsManager() {
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Error al eliminar');
     }
+  };
+
+  const addGalleryImage = () => {
+    const url = newImageUrl.trim();
+    if (!url) return;
+    setForm({ ...form, gallery_images: [...form.gallery_images, url] });
+    setNewImageUrl('');
+  };
+
+  const removeGalleryImage = (index: number) => {
+    setForm({ ...form, gallery_images: form.gallery_images.filter((_, i) => i !== index) });
   };
 
   return (
@@ -100,6 +150,11 @@ export default function ProjectsManager() {
                 <span className="text-xs font-semibold text-terracotta-500 uppercase tracking-wider">{p.category}</span>
                 <h3 className="text-base font-bold text-charcoal-900 mt-1 mb-1">{p.title}</h3>
                 <p className="text-sm text-charcoal-500 line-clamp-2 mb-4">{p.description}</p>
+                {(p.location || p.year) && (
+                  <p className="text-xs text-charcoal-400 mb-3">
+                    {p.location}{p.location && p.year ? ' · ' : ''}{p.year}
+                  </p>
+                )}
                 <div className="flex gap-2">
                   <button onClick={() => openEdit(p)} className="flex-1 flex items-center justify-center gap-1.5 border border-charcoal-200 py-2 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors">
                     <Pencil className="w-4 h-4" strokeWidth={1.5} /> Editar
@@ -150,19 +205,15 @@ export default function ProjectsManager() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-700 mb-1.5">Categoría</label>
+                  <label className="block text-sm font-medium text-charcoal-700 mb-1.5">Servicio / Categoría</label>
                   <select
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value })}
                     className="input-field"
                   >
-                    <option>Obra Civil</option>
-                    <option>Obras Civiles</option>
-                    <option>Movimiento de Suelo</option>
-                    <option>Plateas de Hormigón</option>
-                    <option>Adoquines</option>
-                    <option>Maquinaria</option>
-                    <option>Mantenimiento</option>
+                    {SERVICE_CATEGORIES.map((cat) => (
+                      <option key={cat}>{cat}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
@@ -175,7 +226,7 @@ export default function ProjectsManager() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal-700 mb-1.5">URL de Imagen *</label>
+                  <label className="block text-sm font-medium text-charcoal-700 mb-1.5">URL de Imagen Principal *</label>
                   <input
                     type="url"
                     value={form.image_url}
@@ -188,6 +239,88 @@ export default function ProjectsManager() {
                       <img src={form.image_url} alt="Preview" className="w-full h-full object-cover" />
                     </div>
                   )}
+                </div>
+
+                {/* Gallery images */}
+                <div>
+                  <label className="block text-sm font-medium text-charcoal-700 mb-1.5">Galería de Imágenes</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      value={newImageUrl}
+                      onChange={(e) => setNewImageUrl(e.target.value)}
+                      className="input-field flex-1"
+                      placeholder="https://..."
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addGalleryImage(); } }}
+                    />
+                    <button
+                      type="button"
+                      onClick={addGalleryImage}
+                      className="flex items-center gap-1.5 border border-charcoal-200 px-3 py-2 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors"
+                    >
+                      <ImagePlus className="w-4 h-4" strokeWidth={1.5} />
+                    </button>
+                  </div>
+                  {form.gallery_images.length > 0 && (
+                    <div className="grid grid-cols-4 gap-2 mt-3">
+                      {form.gallery_images.map((url, i) => (
+                        <div key={i} className="relative group aspect-square overflow-hidden bg-charcoal-100">
+                          <img src={url} alt="" className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => removeGalleryImage(i)}
+                            className="absolute inset-0 bg-charcoal-900/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity"
+                          >
+                            <Trash className="w-4 h-4" strokeWidth={1.5} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Technical details */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal-700 mb-1.5">Ubicación</label>
+                    <input
+                      type="text"
+                      value={form.location}
+                      onChange={(e) => setForm({ ...form, location: e.target.value })}
+                      className="input-field"
+                      placeholder="Sierra Grande, Río Negro"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal-700 mb-1.5">Cliente</label>
+                    <input
+                      type="text"
+                      value={form.client}
+                      onChange={(e) => setForm({ ...form, client: e.target.value })}
+                      className="input-field"
+                      placeholder="Privado / Municipalidad..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal-700 mb-1.5">Año</label>
+                    <input
+                      type="text"
+                      value={form.year}
+                      onChange={(e) => setForm({ ...form, year: e.target.value })}
+                      className="input-field"
+                      placeholder="2024"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-charcoal-700 mb-1.5">Alcance</label>
+                    <input
+                      type="text"
+                      value={form.scope}
+                      onChange={(e) => setForm({ ...form, scope: e.target.value })}
+                      className="input-field"
+                      placeholder="Resumen técnico del trabajo"
+                    />
+                  </div>
                 </div>
 
                 {error && (

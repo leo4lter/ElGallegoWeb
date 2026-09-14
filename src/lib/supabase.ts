@@ -10,6 +10,11 @@ export type Project = {
   description: string;
   image_url: string;
   category: string;
+  gallery_images?: string[];
+  location?: string;
+  client?: string;
+  year?: string;
+  scope?: string;
   created_at?: string;
 };
 
@@ -31,50 +36,99 @@ export type Equipment = {
 export const initialProjects: Project[] = [
   {
     id: '1',
-    title: 'Excavación Urbana',
-    description: 'Movimiento de suelo y excavación en obra civil urbana con maquinaria propia.',
-    image_url: 'https://images.pexels.com/photos/15071423/pexels-photo-15071423.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    category: 'Movimiento de Suelo',
+    title: 'Construcción de Vivienda',
+    description: 'Construcción de vivienda familiar con cimientos, estructura y terminaciones completas.',
+    image_url: 'https://images.pexels.com/photos/8961343/pexels-photo-8961343.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    category: 'Construcción',
+    gallery_images: [
+      'https://images.pexels.com/photos/8961343/pexels-photo-8961343.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+      'https://images.pexels.com/photos/8961062/pexels-photo-8961062.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+      'https://images.pexels.com/photos/8961070/pexels-photo-8961070.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    ],
+    location: 'Sierra Grande, Río Negro',
+    client: 'Privado',
+    year: '2023',
+    scope: 'Construcción de vivienda de 120 m² con cimientos, mampostería, techo y terminaciones.',
     created_at: new Date(Date.now() - 5 * 86400000).toISOString(),
   },
   {
     id: '2',
-    title: 'Cimientos y Fundaciones',
-    description: 'Preparación de armaduras y hormigón para plateas y fundaciones estructurales.',
-    image_url: 'https://images.pexels.com/photos/37733178/pexels-photo-37733178.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    category: 'Plateas de Hormigón',
+    title: 'Remodelación de Espacio Comercial',
+    description: 'Remodelación integral de local comercial con pintura, pisos y electricidad.',
+    image_url: 'https://images.pexels.com/photos/8961342/pexels-photo-8961342.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    category: 'Remodelaciones',
+    gallery_images: [
+      'https://images.pexels.com/photos/8961342/pexels-photo-8961342.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+      'https://images.pexels.com/photos/8961086/pexels-photo-8961086.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    ],
+    location: 'Sierra Grande, Río Negro',
+    client: 'Comercio local',
+    year: '2023',
+    scope: 'Remodelación integral de 80 m²: pintura, pisos, electricidad y terminaciones.',
     created_at: new Date(Date.now() - 4 * 86400000).toISOString(),
   },
   {
     id: '3',
-    title: 'Obra Civil Urbana',
-    description: 'Infraestructura básica y obras civiles en zona urbana de Sierra Grande.',
-    image_url: 'https://images.pexels.com/photos/35846752/pexels-photo-35846752.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    category: 'Obras Civiles',
+    title: 'Pintura de Edificio Público',
+    description: 'Pintura exterior e interior de edificio público municipal.',
+    image_url: 'https://images.pexels.com/photos/5690811/pexels-photo-5690811.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    category: 'Pintura',
+    gallery_images: [
+      'https://images.pexels.com/photos/5690811/pexels-photo-5690811.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+      'https://images.pexels.com/photos/5690809/pexels-photo-5690809.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    ],
+    location: 'Sierra Grande, Río Negro',
+    client: 'Municipalidad de Sierra Grande',
+    year: '2022',
+    scope: 'Pintura exterior e interior de 300 m² con preparación de superficies.',
     created_at: new Date(Date.now() - 3 * 86400000).toISOString(),
   },
   {
     id: '4',
-    title: 'Colocación de Adoquines',
-    description: 'Producción y colocación de adoquines para pavimento urbano.',
-    image_url: 'https://images.pexels.com/photos/5690811/pexels-photo-5690811.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    category: 'Adoquines',
+    title: 'Transporte de Materiales',
+    description: 'Servicio de camiones para transporte de materiales de construcción.',
+    image_url: 'https://images.pexels.com/photos/15071423/pexels-photo-15071423.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    category: 'Servicio de Camiones',
+    gallery_images: [
+      'https://images.pexels.com/photos/15071423/pexels-photo-15071423.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+      'https://images.pexels.com/photos/35846752/pexels-photo-35846752.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    ],
+    location: 'Sierra Grande, Río Negro',
+    client: 'Varios',
+    year: '2024',
+    scope: 'Transporte de áridos, materiales y maquinaria con flota de camiones propia.',
     created_at: new Date(Date.now() - 2 * 86400000).toISOString(),
   },
   {
     id: '5',
-    title: 'Excavadora en Obra',
-    description: 'Maquinaria pesada operando en frentes de trabajo urbanos.',
+    title: 'Movimiento de Suelo Urbano',
+    description: 'Excavación, relleno y nivelación de terreno para obra civil.',
     image_url: 'https://images.pexels.com/photos/30751525/pexels-photo-30751525.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    category: 'Maquinaria',
+    category: 'Movimiento de Suelo',
+    gallery_images: [
+      'https://images.pexels.com/photos/30751525/pexels-photo-30751525.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+      'https://images.pexels.com/photos/37733178/pexels-photo-37733178.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    ],
+    location: 'Sierra Grande, Río Negro',
+    client: 'Privado',
+    year: '2024',
+    scope: 'Excavación y relleno de 500 m³ con maquinaria pesada propia.',
     created_at: new Date(Date.now() - 1 * 86400000).toISOString(),
   },
   {
     id: '6',
-    title: 'Fundaciones de Hormigón',
-    description: 'Vista aérea de plateas de hormigón coladas en obra civil.',
+    title: 'Construcción de Platea',
+    description: 'Platea de hormigón para construcción residencial.',
     image_url: 'https://images.pexels.com/photos/36606410/pexels-photo-36606410.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-    category: 'Plateas de Hormigón',
+    category: 'Construcción',
+    gallery_images: [
+      'https://images.pexels.com/photos/36606410/pexels-photo-36606410.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+      'https://images.pexels.com/photos/37733178/pexels-photo-37733178.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+    ],
+    location: 'Sierra Grande, Río Negro',
+    client: 'Privado',
+    year: '2023',
+    scope: 'Platea de hormigón armado de 100 m² con armadura y curado.',
     created_at: new Date().toISOString(),
   },
 ];
