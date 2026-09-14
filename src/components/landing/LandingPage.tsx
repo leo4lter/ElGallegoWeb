@@ -7,6 +7,7 @@ import Clients from '@/components/landing/Clients';
 import Gallery from '@/components/landing/Gallery';
 import Footer from '@/components/landing/Footer';
 import WhatsAppButton from '@/components/landing/WhatsAppButton';
+import ScrollToTop from '@/components/landing/ScrollToTop';
 
 export default function LandingPage() {
   return (
@@ -22,6 +23,7 @@ export default function LandingPage() {
       </main>
       <Footer />
       <WhatsAppButton />
+      <ScrollToTop />
     </div>
   );
 }

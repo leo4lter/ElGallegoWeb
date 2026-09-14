@@ -297,22 +297,36 @@ export async function uploadImage(
   return urlData.publicUrl;
 }
 
-export async function getSiteSettings(): Promise<{ logo_url: string | null; favicon_url: string | null }> {
-  if (!realClient) return { logo_url: null, favicon_url: null };
+export type SiteSettings = {
+  logo_url: string | null;
+  logo_light_url: string | null;
+  favicon_url: string | null;
+};
+
+export async function getSiteSettings(): Promise<SiteSettings> {
+  if (!realClient) return { logo_url: null, logo_light_url: null, favicon_url: null };
   const { data, error } = await realClient
     .from('site_settings')
-    .select('logo_url, favicon_url')
+    .select('logo_url, logo_light_url, favicon_url')
     .eq('id', 1)
     .maybeSingle();
-  if (error) return { logo_url: null, favicon_url: null };
-  return { logo_url: data?.logo_url ?? null, favicon_url: data?.favicon_url ?? null };
+  if (error) return { logo_url: null, logo_light_url: null, favicon_url: null };
+  return {
+    logo_url: data?.logo_url ?? null,
+    logo_light_url: data?.logo_light_url ?? null,
+    favicon_url: data?.favicon_url ?? null,
+  };
 }
 
-export async function saveSiteSettings(logo_url: string | null, favicon_url: string | null): Promise<void> {
+export async function saveSiteSettings(
+  logo_url: string | null,
+  logo_light_url: string | null,
+  favicon_url: string | null,
+): Promise<void> {
   if (!realClient) throw new Error('Supabase no está configurado.');
   const { error } = await realClient
     .from('site_settings')
-    .upsert({ id: 1, logo_url, favicon_url, updated_at: new Date().toISOString() });
+    .upsert({ id: 1, logo_url, logo_light_url, favicon_url, updated_at: new Date().toISOString() });
   if (error) throw new Error(`Error al guardar configuración: ${error.message}`);
 }
 

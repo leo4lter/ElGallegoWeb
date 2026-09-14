@@ -1,15 +1,11 @@
 import { useEffect, useState } from 'react';
-import { getSiteSettings } from '@/lib/supabase';
+import { getSiteSettings, type SiteSettings } from '@/lib/supabase';
 
-type Settings = {
-  logoUrl: string | null;
-  faviconUrl: string | null;
-};
-
-export function useSiteSettings(): Settings & { loading: boolean } {
-  const [settings, setSettings] = useState<Settings>({
-    logoUrl: null,
-    faviconUrl: null,
+export function useSiteSettings(): SiteSettings & { loading: boolean } {
+  const [settings, setSettings] = useState<SiteSettings>({
+    logo_url: null,
+    logo_light_url: null,
+    favicon_url: null,
   });
   const [loading, setLoading] = useState(true);
 
@@ -17,7 +13,7 @@ export function useSiteSettings(): Settings & { loading: boolean } {
     (async () => {
       try {
         const s = await getSiteSettings();
-        setSettings({ logoUrl: s.logo_url, faviconUrl: s.favicon_url });
+        setSettings(s);
         if (s.favicon_url) {
           const link = document.querySelector("link[rel='icon']") as HTMLLinkElement | null;
           if (link) link.href = s.favicon_url;

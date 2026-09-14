@@ -10,11 +10,11 @@ export default function Footer() {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [sent, setSent] = useState(false);
-  const { logoUrl } = useSiteSettings();
+  const { logo_url } = useSiteSettings();
 
   const renderLogo = (height: number) =>
-    logoUrl ? (
-      <img src={logoUrl} alt="Constructora El Gallego" style={{ height, width: 'auto', maxWidth: 280 }} className="object-contain" />
+    logo_url ? (
+      <img src={logo_url} alt="Constructora El Gallego" style={{ height, width: 'auto', maxWidth: 300 }} className="object-contain" />
     ) : (
       <LogoPlaceholder size={height} variant="light" />
     );

@@ -17,14 +17,22 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { logoUrl } = useSiteSettings();
+  const { logo_url, logo_light_url } = useSiteSettings();
 
-  const renderLogo = (height: number, variant: 'light' | 'dark') =>
-    logoUrl ? (
-      <img src={logoUrl} alt="Constructora El Gallego" style={{ height, width: 'auto', maxWidth: 220 }} className="object-contain transition-all duration-300" />
-    ) : (
-      <LogoPlaceholder size={height} variant={variant} />
-    );
+  const renderLogo = (height: number, useLight: boolean) => {
+    const url = useLight ? (logo_light_url || logo_url) : (logo_url || logo_light_url);
+    if (url) {
+      return (
+        <img
+          src={url}
+          alt="Constructora El Gallego"
+          style={{ height, width: 'auto', maxWidth: 260 }}
+          className="object-contain transition-all duration-300"
+        />
+      );
+    }
+    return <LogoPlaceholder size={height} variant={useLight ? 'light' : 'dark'} />;
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -46,7 +54,7 @@ export default function Navbar() {
       >
         <div className="max-w-8xl mx-auto container-px flex items-center justify-between">
           <Link to="/" className="flex items-center group">
-            {renderLogo(scrolled ? 40 : 48, scrolled ? 'dark' : 'light')}
+            {renderLogo(scrolled ? 44 : 52, !scrolled)}
           </Link>
 
           <nav className="hidden lg:flex items-center gap-8">
@@ -96,7 +104,7 @@ export default function Navbar() {
             >
               <div className="flex items-center justify-between px-6 py-5 border-b border-charcoal-100">
                 <div className="flex items-center">
-                  {renderLogo(40, 'dark')}
+                  {renderLogo(44, false)}
                 </div>
                 <button
                   onClick={() => setMobileOpen(false)}
