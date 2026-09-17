@@ -11,10 +11,11 @@ import {
   X,
   ExternalLink,
   Settings,
+  Users,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
-export type AdminSection = 'dashboard' | 'projects' | 'clients' | 'equipment' | 'settings';
+export type AdminSection = 'dashboard' | 'projects' | 'clients' | 'equipment' | 'team' | 'settings';
 
 type SidebarProps = {
   active: AdminSection;
@@ -33,6 +34,7 @@ const navItems: NavItem[] = [
   { id: 'projects', label: 'Proyectos', icon: Building2 },
   { id: 'clients', label: 'Clientes', icon: HardHat },
   { id: 'equipment', label: 'Equipamiento', icon: Wrench },
+  { id: 'team', label: 'Equipo', icon: Users },
   { id: 'settings', label: 'Configuración', icon: Settings },
 ];
 

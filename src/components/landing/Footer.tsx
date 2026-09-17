@@ -170,20 +170,20 @@ export default function Footer() {
             <p className="text-white/40 text-sm">
               © {new Date().getFullYear()} Constructora El Gallego. Todos los derechos reservados.
             </p>
-            <p className="text-white/40 text-sm">Sierra Grande · Río Negro · Argentina</p>
-          </div>
-          <div className="flex justify-center mt-6">
-            <p className="text-white/40 text-sm">
-              Desarrollado por{' '}
-              <a
-                href="https://elmanca.com.ar"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-terracotta-400 hover:text-terracotta-300 transition-colors font-medium"
-              >
-                Manca
-              </a>
-            </p>
+            <div className="flex flex-col items-end gap-2">
+              <p className="text-white/40 text-sm">Sierra Grande · Río Negro · Argentina</p>
+              <p className="text-white/40 text-sm">
+                Desarrollado por{' '}
+                <a
+                  href="https://elmanca.com.ar"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-terracotta-400 hover:text-terracotta-300 transition-colors font-medium"
+                >
+                  Manca
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>

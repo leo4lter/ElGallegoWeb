@@ -6,17 +6,19 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { supabase, type Project, type Client, type Equipment } from '@/lib/supabase';
+import { supabase, type Project, type Client, type Equipment, type TeamMember } from '@/lib/supabase';
 
 type DataContextType = {
   projects: Project[];
   clients: Client[];
   equipment: Equipment[];
+  teamMembers: TeamMember[];
   loading: boolean;
   error: string | null;
   refreshProjects: () => Promise<void>;
   refreshClients: () => Promise<void>;
   refreshEquipment: () => Promise<void>;
+  refreshTeamMembers: () => Promise<void>;
   addProject: (p: Omit<Project, 'id' | 'created_at'>) => Promise<void>;
   updateProject: (id: string, p: Partial<Project>) => Promise<void>;
   deleteProject: (id: string) => Promise<void>;
@@ -26,6 +28,9 @@ type DataContextType = {
   addEquipment: (e: Omit<Equipment, 'id' | 'created_at'>) => Promise<void>;
   updateEquipment: (id: string, e: Partial<Equipment>) => Promise<void>;
   deleteEquipment: (id: string) => Promise<void>;
+  addTeamMember: (m: Omit<TeamMember, 'id' | 'created_at'>) => Promise<void>;
+  updateTeamMember: (id: string, m: Partial<TeamMember>) => Promise<void>;
+  deleteTeamMember: (id: string) => Promise<void>;
 };
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -34,6 +39,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
   const [equipment, setEquipment] = useState<Equipment[]>([]);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -91,11 +97,29 @@ export function DataProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const fetchTeamMembers = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('team_members')
+        .select('*')
+        .order('display_order', { ascending: true });
+      if (error) {
+        setError(error.message);
+        return;
+      }
+      setError(null);
+      setTeamMembers(data || []);
+    } catch (err: unknown) {
+      console.error('Failed to fetch team members:', err);
+      setError(err instanceof Error ? err.message : 'Error al cargar equipo');
+    }
+  }, []);
+
   useEffect(() => {
     let mounted = true;
     (async () => {
       try {
-        await Promise.all([fetchProjects(), fetchClients(), fetchEquipment()]);
+        await Promise.all([fetchProjects(), fetchClients(), fetchEquipment(), fetchTeamMembers()]);
       } catch (err) {
         console.error('Initial data load error:', err);
       } finally {
@@ -107,7 +131,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     return () => {
       mounted = false;
     };
-  }, [fetchProjects, fetchClients, fetchEquipment]);
+  }, [fetchProjects, fetchClients, fetchEquipment, fetchTeamMembers]);
 
   const addProject = useCallback(async (p: Omit<Project, 'id' | 'created_at'>) => {
     const { error } = await supabase.from('projects').insert([p]);
@@ -163,17 +187,37 @@ export function DataProvider({ children }: { children: ReactNode }) {
     await fetchEquipment();
   }, [fetchEquipment]);
 
+  const addTeamMember = useCallback(async (m: Omit<TeamMember, 'id' | 'created_at'>) => {
+    const { error } = await supabase.from('team_members').insert([m]);
+    if (error) throw error;
+    await fetchTeamMembers();
+  }, [fetchTeamMembers]);
+
+  const updateTeamMember = useCallback(async (id: string, m: Partial<TeamMember>) => {
+    const { error } = await supabase.from('team_members').update(m).eq('id', id);
+    if (error) throw error;
+    await fetchTeamMembers();
+  }, [fetchTeamMembers]);
+
+  const deleteTeamMember = useCallback(async (id: string) => {
+    const { error } = await supabase.from('team_members').delete().eq('id', id);
+    if (error) throw error;
+    await fetchTeamMembers();
+  }, [fetchTeamMembers]);
+
   return (
     <DataContext.Provider
       value={{
         projects,
         clients,
         equipment,
+        teamMembers,
         loading,
         error,
         refreshProjects: fetchProjects,
         refreshClients: fetchClients,
         refreshEquipment: fetchEquipment,
+        refreshTeamMembers: fetchTeamMembers,
         addProject,
         updateProject,
         deleteProject,
@@ -183,6 +227,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
         addEquipment,
         updateEquipment,
         deleteEquipment,
+        addTeamMember,
+        updateTeamMember,
+        deleteTeamMember,
       }}
     >
       {children}

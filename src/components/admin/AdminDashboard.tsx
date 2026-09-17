@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useData } from '@/context/DataContext';
-import { Building2, HardHat, Wrench, TrendingUp } from 'lucide-react';
+import { Building2, HardHat, Wrench, TrendingUp, Users } from 'lucide-react';
 import type { AdminSection } from '@/components/admin/AdminLayout';
 
 export default function AdminDashboard({
@@ -8,12 +8,13 @@ export default function AdminDashboard({
 }: {
   onNavigate: (s: AdminSection) => void;
 }) {
-  const { projects, clients, equipment } = useData();
+  const { projects, clients, equipment, teamMembers } = useData();
 
   const stats = [
     { label: 'Proyectos', value: projects.length, icon: Building2, section: 'projects' as AdminSection, color: 'terracotta' },
     { label: 'Clientes', value: clients.length, icon: HardHat, section: 'clients' as AdminSection, color: 'charcoal' },
     { label: 'Equipamiento', value: equipment.length, icon: Wrench, section: 'equipment' as AdminSection, color: 'charcoal' },
+    { label: 'Equipo', value: teamMembers.length, icon: Users, section: 'team' as AdminSection, color: 'charcoal' },
   ];
 
   return (
@@ -23,7 +24,7 @@ export default function AdminDashboard({
         <p className="text-charcoal-500 mt-1">Vista general del contenido del sitio.</p>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
         {stats.map((stat, i) => (
           <motion.button
             key={stat.label}
@@ -61,6 +62,9 @@ export default function AdminDashboard({
           </button>
           <button onClick={() => onNavigate('equipment')} className="btn-secondary text-sm py-2.5 px-5">
             Gestionar Equipamiento
+          </button>
+          <button onClick={() => onNavigate('team')} className="btn-secondary text-sm py-2.5 px-5">
+            Gestionar Equipo
           </button>
         </div>
       </div>

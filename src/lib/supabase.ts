@@ -297,6 +297,16 @@ export async function uploadImage(
   return urlData.publicUrl;
 }
 
+export type TeamMember = {
+  id: string;
+  name: string;
+  role: string;
+  bio: string | null;
+  image_url: string | null;
+  display_order: number;
+  created_at?: string;
+};
+
 export type SiteSettings = {
   logo_url: string | null;
   logo_light_url: string | null;

@@ -5,6 +5,7 @@ import AdminDashboard from '@/components/admin/AdminDashboard';
 import ProjectsManager from '@/components/admin/ProjectsManager';
 import ClientsManager from '@/components/admin/ClientsManager';
 import EquipmentManager from '@/components/admin/EquipmentManager';
+import TeamManager from '@/components/admin/TeamManager';
 import SiteSettings from '@/components/admin/SiteSettings';
 import { safeSessionStorage } from '@/lib/storage';
 
@@ -35,6 +36,7 @@ export default function AdminPage() {
       {section === 'projects' && <ProjectsManager />}
       {section === 'clients' && <ClientsManager />}
       {section === 'equipment' && <EquipmentManager />}
+      {section === 'team' && <TeamManager />}
       {section === 'settings' && <SiteSettings />}
     </AdminLayout>
   );
