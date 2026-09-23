@@ -134,7 +134,7 @@ export default function TeamManager() {
               animate={{ opacity: 1, y: 0 }}
               className="admin-card overflow-hidden group"
             >
-              <div className="aspect-[3/4] overflow-hidden bg-charcoal-100">
+              <div className="aspect-square overflow-hidden bg-charcoal-100">
                 {m.image_url ? (
                   <img src={m.image_url} alt={m.name} loading="lazy" className="w-full h-full object-cover" />
                 ) : (
@@ -235,9 +235,9 @@ export default function TeamManager() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-charcoal-700 mb-1.5">Foto</label>
-                  <p className="text-charcoal-400 text-xs mb-3">Medidas recomendadas: 600 x 800 px · Formato: PNG o JPG</p>
+                  <p className="text-charcoal-400 text-xs mb-3">Medidas recomendadas: 512 x 512 px · Formato: PNG o JPG · La imagen se ajusta automaticamente</p>
                   <div className="flex items-center gap-4 mb-3">
-                    <div className="aspect-[3/4] w-32 overflow-hidden bg-charcoal-100 border border-charcoal-200 flex items-center justify-center flex-shrink-0">
+                    <div className="aspect-square w-28 overflow-hidden bg-charcoal-100 border border-charcoal-200 flex items-center justify-center flex-shrink-0">
                       {form.image_url ? (
                         <img src={form.image_url} alt="Preview" className="w-full h-full object-cover" />
                       ) : (
